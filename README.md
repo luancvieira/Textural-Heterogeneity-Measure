@@ -10,8 +10,6 @@ Algoritmo para execução do método que tem por objetivo obter uma medida indic
 
 ## Arquivos
 
-- `schedule_jobs.sh`: _Script shell_para processar múltiplas imagens a partir de um arquivo CSV.
-- `run_sample.sh`: _Script shell_ para cálculo da medida de heterogeneidade.
 - `run_sample.py`: _Script python_ para processar imagens e calcular .
 - `parser_utils.py`: Funções utilitárias para parseamento de argumentos do _shell_.
 - `image_preprocessing_utils.py`: Funções para pré-processamento de imagens.
@@ -36,48 +34,7 @@ O script `run_sample.py` possui os seguintes argumentos:
 - **`-z_ini`** (int ou None): Índice inicial no eixo Z (opcional).
 - **`-z_fin`** (int ou None): Índice final no eixo Z (opcional).
 
-### Preparação dos arquivos
-
-Para submeter um job usando `sbatch`, siga estes passos:
-
-- Copie este projeto para o seu local de preferência e atualize os caminhos em `run_sample.sh`.
-  
-```bash
-cp -r /nethome/drp/ia-drp/luan_workspace/PetrophysicsFeatures /pasta/do/usuario
-```
-
-- Alterar: **/nethome/drp/ia-drp/luan_workspace:/home** no arquivo [run_sample](./function/run_sample.sh).
-- Verificar que os arquivos CSV de **/nethome/drp/ia-drp/luan_workspace/PetrophysicsFeatures/features** estão na pasta features.
-
-- Configurar parâmetros no arquivo [run_sample.sh](./function/run_sample.sh).
-    Exemplo: `-contrast_adjustment_options true,false` para calcular medida com e sem ajuste de contraste.
-    A conversão para lista [True, False] é feita dentro do código pela pelo [parser_utils.py](./function/parser_utils.py).
-
-### Execução via `sbatch`:
-
-- Múltiplos arquivos via CSV
-
-```bash
-sbatch schedule_jobs.sh samples_test.csv
-```
-
-- Arquivo único
-
-```bash
-sbatch run_sample.sh /caminho/para/nc 
-```
-
-- Arquivo único com z_ini e z_fin (opcional e temporário enquanto desenvolvemos o código para automatizar o corte na dimensão z). Caso não seja fornecido, é usado um threshold de 10% para definir z_min e z_max.
-
-```bash
-sbatch run_sample.sh /caminho/para/nc z_ini z_fin
-```
-
-Para rodar com e sem ajuste de contraste, alterar contrast_
-
 ### Execução importando função:
-
-Caso opte por importar a função para executá-la diretamente no seu código:
 
 ```python
 from run_sample import heterogeneity_rank
@@ -98,60 +55,6 @@ heterogeneity_rank(
 
 ### Arquivos auxiliares
 
-[Base de amostras com valores de entropia previamente calculados - cortes manuais, voidmean, rockmedian](./function/allfilesdata3D_newcuts.csv)
-
-[Arquivo CSV de exemplo para teste da execução](./function/samples_test.csv)
+[Base de amostras com valores de entropia previamente calculados - cortes manuais, voidmean, rockmedian]
 
 - Observação: os valores de _voidmean_ e _rockmedian_ são aleatórios, acarretando uma pequena diferença nos valores a cada rodada (podemos fixar a _seed_).
-
-### Exemplos de uso
-
-1. Múltiplas imagens via arquivo CSV
-
-
-```
-sbatch schedule_jobs.sh samples_test.csv
-```
-
-#### Job scheduler
-
-- [log](./function/logs/Result-schedule_jobs.5561975.out)
-
-##### Output RJS749_T012338V_LIMPA_P_58500nm_23102024_235247
-
-- [Info](./function/output/RJS749_T012338V_LIMPA_P_58500nm_23102024_235247/info_RJS749_T012338V_LIMPA_P_58500nm.csv)
-- [Features](./function/output/RJS749_T012338V_LIMPA_P_58500nm_23102024_235247/features_RJS749_T012338V_LIMPA_P_58500nm.csv)
-- [Entropy](./function/output/RJS749_T012338V_LIMPA_P_58500nm_23102024_235247/entropy_RJS749_T012338V_LIMPA_P_58500nm.csv)
-- [Rank](./function/output/RJS749_T012338V_LIMPA_P_58500nm_23102024_235247/entropy_RJS749_T012338V_LIMPA_P_58500nm.csv)
-- [log](./function/logs/Result-run_sample.5561976.out)
-
-##### Output RJS749D_T012329H_LIMPA_P_58500nm_23102024_235300
-
-- [Info](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235300/info_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [Features](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235300/features_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [Entropy](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235300/entropy_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [Rank](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235300/entropy_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [log](./function/logs/Result-run_sample.5561977.out)
-
-2. Imagem única sem arquivo CSV - Informando cortes no eixo Z selecionados manualmente (opcional)
-
-#### Sem job scheduler
-
-```
-sbatch run_sample.sh /data/RJS749D_T012329H_LIMPA_P_58500nm.nc 60 490
-```
-
-##### Output RJS749D_T012329H_LIMPA_P_58500nm_23102024_235417
-
-- [Info](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235417/info_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [Features](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235417/features_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [Entropy](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235417/entropy_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [Rank](./function/output/RJS749D_T012329H_LIMPA_P_58500nm_23102024_235417/rank_RJS749D_T012329H_LIMPA_P_58500nm.csv)
-- [log](./function/logs/Result-run_sample.5561978.out)
-
-3. Imagem única sem arquivo CSV - Informando cortes inválidos
-
-```
-sbatch run_sample.sh /data/RJS749D_T012329H_LIMPA_P_58500nm.nc 100 300
-```
-- [log](./function/logs/Result-run_sample.5561979.out)
