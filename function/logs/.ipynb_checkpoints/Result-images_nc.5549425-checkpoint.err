@@ -1,0 +1,4 @@
+  File "/nethome/drp/ia-drp/julio_workspace/PetrophysicsFeatures/function/run_sample.py", line 146
+    parser.add_argument("-feature_list", type=list_of_strings, default='mean,std,kurtosis,"variation coefficient")
+                                                                                                                 ^
+SyntaxError: EOL while scanning string literal

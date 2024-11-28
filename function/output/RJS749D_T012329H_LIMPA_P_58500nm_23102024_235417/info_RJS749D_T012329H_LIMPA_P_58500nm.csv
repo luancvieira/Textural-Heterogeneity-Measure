@@ -1,0 +1,2 @@
+dataset,voidmean,rockmedian,z_ini,z_fin,x_ini,x_fin,y_ini,y_fin,contrast_adjustment
+/data/RJS749D_T012329H_LIMPA_P_58500nm.nc,1887.349192302951,5904.289301981782,60,490,124.0,542.0,127.0,545.0,True
