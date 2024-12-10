@@ -10,7 +10,7 @@ Algoritmo para execução do método que tem por objetivo obter uma medida indic
 
 ## Arquivos
 
-- `run_sample.py`: _Script python_ para processar imagens e calcular .
+- `run_sample.py`: _Script python_ para processar imagens e calcular.
 - `parser_utils.py`: Funções utilitárias para parseamento de argumentos do _shell_.
 - `image_preprocessing_utils.py`: Funções para pré-processamento de imagens.
 - `feature_calculation_utils.py`: Funções para cálculo de _features_ dentro de cada subvolume.
