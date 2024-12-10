@@ -1,60 +1,52 @@
 # README
 
-## Visão Geral
+## Overview
 
-Algoritmo para execução do método que tem por objetivo obter uma medida indicadora de heterogeneidade em rochas. Inicialmente é feito o processo de divisão sistemática de imagens de amostras rochosas em subvolumes e o subsequente cálculo de atributos em cada subvolume. Em seguida a entropia é utilizada, por se tratar de uma medida estatística que indica a incerteza ou a quantidade de informação contida em uma variável aleatória. A metodologia envolve o particionamento da imagem em subcubos e o cálculo de características estatísticas diretamente dos valores de escala de cinza, explorando a relação entre a variação dos resultados e a presença de heterogeneidade.
+Algorithm for executing a method aimed at obtaining an indicator measure of rock heterogeneity. Initially, the process involves systematically dividing rock sample images into subvolumes and subsequently calculating attributes for each subvolume. Entropy is then used as it is a statistical measure that indicates the uncertainty or amount of information contained in a random variable. The methodology includes partitioning the image into subcubes and calculating statistical features directly from grayscale values, exploring the relationship between result variation and the presence of heterogeneity.
 
-## Requisitos
+## Requirements
 
-- Utilizar imagem fornecida no arquivo [Dockerfile](./Dockerfile). (Já consta na imagem do singularity em [run_sample.sh](./function/run_sample.sh) (sif="/nethome/drp/ia-drp/singularity/lab2m_ubu_11.10_cuda_11.8.0_devel_tensorflow_2.11.sif").
+- Use the image provided in the [Dockerfile](./Dockerfile) file.
 
-## Arquivos
+## Files
 
-- `run_sample.py`: _Script python_ para processar imagens e calcular .
-- `parser_utils.py`: Funções utilitárias para parseamento de argumentos do _shell_.
-- `image_preprocessing_utils.py`: Funções para pré-processamento de imagens.
-- `feature_calculation_utils.py`: Funções para cálculo de _features_ dentro de cada subvolume.
-- `rank_calculation_utils.py`: Funções para cálculo de entropia e ranking de heterogeneidade.
+- `run_sample.py`: Python script for processing images and performing calculations.
+- `parser_utils.py`: Utility functions for shell argument parsing.
+- `image_preprocessing_utils.py`: Functions for image preprocessing.
+- `feature_calculation_utils.py`: Functions for calculating features within each subvolume.
+- `rank_calculation_utils.py`: Functions for entropy calculation and heterogeneity ranking.
 
+## Execution
 
-## Execução
+### Arguments for execution
 
-### Argumentos para execução
+The `run_sample.py` script has the following arguments:
 
-O script `run_sample.py` possui os seguintes argumentos:
+- **`-sample_path`** (str): Path to the `.nc` file of the sample (required).
+- **`-features_folder`** (str): Path to the directory where features will be stored.
+- **`-output_folder`** (str): Directory where the results will be saved.
+- **`-data_entropy_path`** (str): Path to the CSV file with previously calculated entropy data.
+- **`-data_rank_path`** (str): Path to the CSV file with ranking data.
+- **`-division_list`** (list): List of divisions (default: `[2,3,4,5,6,7,8,9,10]`).
+- **`-contrast_adjustment_options`** (list): List of contrast adjustment options (default: `[True, False]`).
+- **`-feature_list`** (list): Features to calculate for each subcube (default: `['mean','std','kurtosis','variation coefficient']`).
+- **`-z_ini`** (int or None): Starting index on the Z-axis (optional).
+- **`-z_fin`** (int or None): Ending index on the Z-axis (optional).
 
-- **`-sample_path`** (str): Caminho para o arquivo `.nc` da amostra (obrigatório).
-- **`-features_folder`** (str): Caminho para o diretório onde as _features_ serão armazenadas.
-- **`-output_folder`** (str): Diretório onde os resultados serão salvos.
-- **`-data_entropy_path`** (str): Caminho para o CSV com dados de entropia previamente calculados.
-- **`-data_rank_path`** (str): Caminho para o CSV com dados de ranking.
-- **`-division_list`** (list): Lista de divisões (padrão: `[2,3,4,5,6,7,8,9,10]`).
-- **`-contrast_adjustment_options`** (list): Lista de ajustes de contraste (padrão: `[True, False]`).
-- **`-feature_list`** (list): _Features_ para calcular em cada subcubo (padrão: `['mean','std','kurtosis','variation coefficient']`).
-- **`-z_ini`** (int ou None): Índice inicial no eixo Z (opcional).
-- **`-z_fin`** (int ou None): Índice final no eixo Z (opcional).
-
-### Execução importando função:
+### Execution by importing the function
 
 ```python
 from run_sample import heterogeneity_rank
 
 heterogeneity_rank(
-    sample_path='/caminho/para/imagem_da_amostra.nc',
-    features_folder = '/pasta/features'
-    output_folder='/caminho/para/diretorio_de_saida',
+    sample_path='/path/to/sample_image.nc',
+    features_folder='/path/to/features',
+    output_folder='/path/to/output_directory',
     division_list=[2, 3, 4, 5, 6, 7, 8, 9, 10],
     contrast_adjustment_options=[True, False],
     feature_list=['mean', 'std', 'kurtosis', 'variation coefficient'],
-    data_rank_path='/caminho/para/entropy_rank_results.csv',
-    data_entropy_path='/caminho/para/entropy_results.csv',
-    z_ini = None,
-    z_fin = None
+    data_rank_path='/path/to/entropy_rank_results.csv',
+    data_entropy_path='/path/to/entropy_results.csv',
+    z_ini=None,
+    z_fin=None
 )
-```
-
-### Arquivos auxiliares
-
-[Base de amostras com valores de entropia previamente calculados - cortes manuais, voidmean, rockmedian]
-
-- Observação: os valores de _voidmean_ e _rockmedian_ são aleatórios, acarretando uma pequena diferença nos valores a cada rodada (podemos fixar a _seed_).
